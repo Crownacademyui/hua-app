@@ -19,6 +19,7 @@ function computeProgress(steps: Step[]): number {
 
 function attachSteps(goal: Goal, steps: Step[]): GoalWithSteps {
   const goalSteps = steps.filter((s) => s.goal_id === goal.id);
+
   return {
     ...goal,
     steps: goalSteps.sort((a, b) => a.order_index - b.order_index),
@@ -35,7 +36,11 @@ export async function signIn(email: string, password: string) {
     email,
     password,
   });
-  return { user: data?.user ?? null, error: error?.message ?? null };
+
+  return {
+    user: data?.user ?? null,
+    error: error?.message ?? null,
+  };
 }
 
 export async function signUp(
@@ -48,10 +53,17 @@ export async function signUp(
     email,
     password,
     options: {
-      data: { full_name: fullName, role },
+      data: {
+        full_name: fullName,
+        role,
+      },
     },
   });
-  return { user: data?.user ?? null, error: error?.message ?? null };
+
+  return {
+    user: data?.user ?? null,
+    error: error?.message ?? null,
+  };
 }
 
 export async function signOut() {
@@ -62,6 +74,7 @@ export async function getCurrentUserId(): Promise<string | null> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
   return user?.id ?? null;
 }
 
@@ -78,6 +91,7 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
     console.error("fetchProfile error:", error.message);
     return null;
   }
+
   return data as Profile;
 }
 
@@ -90,19 +104,21 @@ export async function updateProfile(
     .update(updates)
     .eq("id", userId);
 
-  return { error: error?.message ?? null };
+  return {
+    error: error?.message ?? null,
+  };
 }
 
 // ─── Goals ────────────────────────────────────────────────────────────────────
 
 export async function fetchGoals(userId: string): Promise<GoalWithSteps[]> {
-  // Fetch goals and their steps in two parallel queries for efficiency
   const [goalsRes, stepsRes] = await Promise.all([
     supabase
       .from("goals")
       .select("*")
       .eq("user_id", userId)
       .order("created_at", { ascending: false }),
+
     supabase.from("steps").select("*").eq("user_id", userId),
   ]);
 
@@ -122,7 +138,11 @@ export async function fetchGoalById(
 ): Promise<GoalWithSteps | null> {
   const [goalRes, stepsRes] = await Promise.all([
     supabase.from("goals").select("*").eq("id", goalId).single(),
-    supabase.from("steps").select("*").eq("goal_id", goalId).order("order_index"),
+    supabase
+      .from("steps")
+      .select("*")
+      .eq("goal_id", goalId)
+      .order("order_index"),
   ]);
 
   if (goalRes.error || !goalRes.data) return null;
@@ -157,16 +177,25 @@ export async function updateGoal(
 ): Promise<{ error: string | null }> {
   const { error } = await supabase
     .from("goals")
-    .update(updates as Record<string, unknown>)
+    .update(updates)
     .eq("id", goalId);
 
-  return { error: error?.message ?? null };
+  return {
+    error: error?.message ?? null,
+  };
 }
 
-export async function deleteGoal(goalId: string): Promise<{ error: string | null }> {
-  // Steps are cascade-deleted via FK
-  const { error } = await supabase.from("goals").delete().eq("id", goalId);
-  return { error: error?.message ?? null };
+export async function deleteGoal(
+  goalId: string
+): Promise<{ error: string | null }> {
+  const { error } = await supabase
+    .from("goals")
+    .delete()
+    .eq("id", goalId);
+
+  return {
+    error: error?.message ?? null,
+  };
 }
 
 // ─── Steps ────────────────────────────────────────────────────────────────────
@@ -198,18 +227,35 @@ export async function toggleStep(
     .update({ is_completed: !currentValue })
     .eq("id", stepId);
 
-  return { error: error?.message ?? null };
+  return {
+    error: error?.message ?? null,
+  };
 }
 
 export async function updateStep(
   input: UpdateStepInput
 ): Promise<{ error: string | null }> {
   const { id, ...updates } = input;
-  const { error } = await supabase.from("steps").update(updates as Record<string, unknown>).eq("id", id);
-  return { error: error?.message ?? null };
+
+  const { error } = await supabase
+    .from("steps")
+    .update(updates)
+    .eq("id", id);
+
+  return {
+    error: error?.message ?? null,
+  };
 }
 
-export async function deleteStep(stepId: string): Promise<{ error: string | null }> {
-  const { error } = await supabase.from("steps").delete().eq("id", stepId);
-  return { error: error?.message ?? null };
+export async function deleteStep(
+  stepId: string
+): Promise<{ error: string | null }> {
+  const { error } = await supabase
+    .from("steps")
+    .delete()
+    .eq("id", stepId);
+
+  return {
+    error: error?.message ?? null,
+  };
 }
