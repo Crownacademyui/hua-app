@@ -87,7 +87,7 @@ export async function updateProfile(
 ): Promise<{ error: string | null }> {
   const { error } = await supabase
     .from("profiles")
-    .update(updates as Record<string, unknown>)
+    .update(updates)
     .eq("id", userId);
 
   return { error: error?.message ?? null };
