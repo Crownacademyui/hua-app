@@ -87,7 +87,7 @@ export async function updateProfile(
 ): Promise<{ error: string | null }> {
   const { error } = await supabase
     .from("profiles")
-    .update(updates)
+    .update(updates as Record<string, unknown>)
     .eq("id", userId);
 
   return { error: error?.message ?? null };
@@ -157,7 +157,7 @@ export async function updateGoal(
 ): Promise<{ error: string | null }> {
   const { error } = await supabase
     .from("goals")
-    .update(updates)
+    .update(updates as Record<string, unknown>)
     .eq("id", goalId);
 
   return { error: error?.message ?? null };
@@ -205,7 +205,7 @@ export async function updateStep(
   input: UpdateStepInput
 ): Promise<{ error: string | null }> {
   const { id, ...updates } = input;
-  const { error } = await supabase.from("steps").update(updates).eq("id", id);
+  const { error } = await supabase.from("steps").update(updates as Record<string, unknown>).eq("id", id);
   return { error: error?.message ?? null };
 }
 
