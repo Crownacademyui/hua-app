@@ -24,11 +24,11 @@ export default function LandingPage() {
               <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z" />
             </svg>
           </div>
-          <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 22 }}>Hua</span>
+          <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 22, color: "#fff" }}>Hua</span>
         </div>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <Link href="/auth/login" className="btn-secondary" style={{ padding: "10px 20px", fontSize: 14 }}>Log in</Link>
-          <Link href="/auth/signup" className="btn-primary" style={{ padding: "10px 20px", fontSize: 14 }}>Get started free</Link>
+          <Link href="/auth/signup" className="btn-primary" style={{ padding: "10px 20px", fontSize: 14 }}>Sign up</Link>
         </div>
       </nav>
 
@@ -39,7 +39,7 @@ export default function LandingPage() {
           <span style={{ fontSize: 13, color: "#FFA500", fontWeight: 500 }}>Built for African Freelancers & Founders</span>
         </div>
 
-        <h1 style={{ fontSize: "clamp(40px, 6vw, 68px)", fontWeight: 800, lineHeight: 1.1, marginBottom: 24, letterSpacing: "-2px" }}>
+        <h1 style={{ fontSize: "clamp(40px, 6vw, 68px)", fontWeight: 800, lineHeight: 1.1, marginBottom: 24, letterSpacing: "-2px", color: "#fff" }}>
           Set goals that<br />
           <span style={{ background: "linear-gradient(135deg, #FFA500, #ff6b00)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
             actually get done.
@@ -50,30 +50,14 @@ export default function LandingPage() {
           Hua helps freelancers and small business owners across Africa track goals, build accountability habits, and grow with clarity.
         </p>
 
-        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <Link href="/auth/signup" className="btn-primary" style={{ padding: "14px 28px", fontSize: 15, borderRadius: 14 }}>
-            Start for free
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-          </Link>
-          <Link href="/dashboard" className="btn-secondary" style={{ padding: "14px 28px", fontSize: 15, borderRadius: 14 }}>
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 12m-3 0a3 3 0 1 0 6 0 3 3 0 0 0-6 0" /></svg>
-            View demo
-          </Link>
-        </div>
-
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 20, marginTop: 48, flexWrap: "wrap" }}>
-          {["2,400+ users", "94% hit goals", "7-day avg streak"].map((text) => (
-            <div key={text} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#FFA500" }} />
-              <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{text}</span>
-            </div>
-          ))}
-        </div>
+        <Link href="/auth/signup" className="btn-primary" style={{ padding: "14px 36px", fontSize: 16, borderRadius: 14, display: "inline-flex", alignItems: "center", gap: 8 }}>
+          Sign up now →
+        </Link>
       </div>
 
       {/* Features */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 48px 80px" }}>
-        <h2 style={{ fontSize: 36, fontWeight: 700, textAlign: "center", marginBottom: 8, letterSpacing: "-1px" }}>Everything you need to thrive</h2>
+        <h2 style={{ fontSize: 36, fontWeight: 700, textAlign: "center", marginBottom: 8, letterSpacing: "-1px", color: "#fff" }}>Everything you need to thrive</h2>
         <p style={{ textAlign: "center", color: "rgba(255,255,255,0.5)", marginBottom: 48 }}>Built with the African hustle in mind</p>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
@@ -84,10 +68,36 @@ export default function LandingPage() {
                   {f.icon.split(" M").map((d, i) => <path key={i} d={i === 0 ? d : "M" + d} />)}
                 </svg>
               </div>
-              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{f.title}</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: "#fff" }}>{f.title}</h3>
               <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>{f.desc}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Pricing highlight */}
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 48px 60px" }}>
+        <div className="card" style={{ padding: 40, textAlign: "center", background: "rgba(255,165,0,0.04)", border: "1px solid rgba(255,165,0,0.15)" }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8, color: "#fff" }}>Simple, one-time pricing</h2>
+          <p style={{ color: "rgba(255,255,255,0.5)", marginBottom: 24, fontSize: 14 }}>Pay once. Use Hua forever. No subscriptions, no hidden fees.</p>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "baseline", gap: 8, marginBottom: 24 }}>
+            <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800, fontSize: 48, color: "#FFA500" }}>₦5,000</span>
+            <span style={{ fontSize: 16, color: "rgba(255,255,255,0.4)" }}>one-time</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 300, margin: "0 auto 28px" }}>
+            {["Unlimited goals & steps", "Progress tracking & streaks", "Email reminders", "Freelancer business guides", "All future updates included"].map(item => (
+              <div key={item} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(255,165,0,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="#FFA500" strokeWidth="3"><path d="M20 6L9 17l-5-5" /></svg>
+                </div>
+                <span style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", textAlign: "left" }}>{item}</span>
+              </div>
+            ))}
+          </div>
+          <Link href="/auth/signup" className="btn-primary" style={{ padding: "14px 36px", fontSize: 15, borderRadius: 14, display: "inline-flex" }}>
+            Sign up now →
+          </Link>
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 12 }}>Students get ₦3,000 with coupon code at checkout</p>
         </div>
       </div>
 
@@ -95,10 +105,10 @@ export default function LandingPage() {
       <div style={{ maxWidth: 600, margin: "0 auto", padding: "0 48px 80px", textAlign: "center" }}>
         <div className="card" style={{ padding: 48, background: "linear-gradient(135deg, rgba(2,6,111,0.8), rgba(255,165,0,0.08))", border: "1px solid rgba(255,165,0,0.2)" }}>
           <div style={{ fontSize: 36, marginBottom: 16 }}>🔥</div>
-          <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12 }}>Ready to start achieving?</h2>
-          <p style={{ color: "rgba(255,255,255,0.5)", marginBottom: 28, fontSize: 15 }}>Join thousands of African freelancers building toward their goals every day.</p>
-          <Link href="/auth/signup" className="btn-primary" style={{ padding: "14px 32px", fontSize: 15, borderRadius: 14 }}>
-            Create free account
+          <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12, color: "#fff" }}>Ready to start achieving?</h2>
+          <p style={{ color: "rgba(255,255,255,0.5)", marginBottom: 28, fontSize: 15 }}>Join African freelancers building toward their goals every day.</p>
+          <Link href="/auth/signup" className="btn-primary" style={{ padding: "14px 32px", fontSize: 15, borderRadius: 14, display: "inline-flex" }}>
+            Sign up now
           </Link>
         </div>
       </div>
