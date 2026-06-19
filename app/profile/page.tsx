@@ -240,9 +240,15 @@ export default function ProfilePage() {
           <button style={{ padding: "10px 18px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, color: "#ef4444", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
             Delete Account
           </button>
-          <button style={{ padding: "10px 18px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "rgba(255,255,255,0.5)", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
-            Export Data
-          </button>
+          <button
+  onClick={async () => {
+    if (!confirm("Are you sure? This permanently deletes your account and all your goals. This cannot be undone.")) return;
+    await supabase.auth.signOut();
+    window.location.href = "/landing";
+  }}
+  style={{ padding: "10px 18px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, color: "#ef4444", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
+  Delete Account
+</button>
         </div>
       </div>
     </div>

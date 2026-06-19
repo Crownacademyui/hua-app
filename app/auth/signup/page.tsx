@@ -52,7 +52,7 @@ export default function SignupPage() {
     if (authError) {
       setError(authError);
     } else {
-      router.push("/dashboard");
+      router.push("/payment");
     }
   }
 
