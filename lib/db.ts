@@ -9,8 +9,6 @@ import type {
   Profile,
 } from "@/types";
 
-// --- Helpers ---
-
 function computeProgress(steps: Step[]): number {
   if (steps.length === 0) return 0;
   const done = steps.filter((s) => s.is_completed).length;
@@ -28,25 +26,14 @@ function attachSteps(goal: Goal, steps: Step[]): GoalWithSteps {
   };
 }
 
-// --- Auth ---
-
 export async function signIn(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   return { user: data?.user ?? null, error: error?.message ?? null };
 }
 
-export async function signUp(
-  email: string,
-  password: string,
-  fullName: string,
-  role: string
-) {
+export async function signUp(email: string, password: string, fullName: string, role: string) {
   const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
+    email, password,
     options: { data: { full_name: fullName, role } },
   });
   return { user: data?.user ?? null, error: error?.message ?? null };
@@ -60,8 +47,6 @@ export async function getCurrentUserId(): Promise<string | null> {
   const { data: { user } } = await supabase.auth.getUser();
   return user?.id ?? null;
 }
-
-// --- Profile ---
 
 export async function fetchProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
@@ -78,24 +63,18 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
 
 export async function updateProfile(
   userId: string,
-  updates: Partial<Profile>
+  updates: Record<string, unknown>
 ): Promise<{ error: string | null }> {
   const { error } = await supabase
     .from("profiles")
-    .update(updates as Record<string, unknown>)
+    .update(updates)
     .eq("id", userId);
   return { error: error?.message ?? null };
 }
 
-// --- Goals ---
-
 export async function fetchGoals(userId: string): Promise<GoalWithSteps[]> {
   const [goalsRes, stepsRes] = await Promise.all([
-    supabase
-      .from("goals")
-      .select("*")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false }),
+    supabase.from("goals").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
     supabase.from("steps").select("*").eq("user_id", userId),
   ]);
   if (goalsRes.error) {
@@ -118,10 +97,7 @@ export async function fetchGoalById(goalId: string): Promise<GoalWithSteps | nul
   return attachSteps(goal, steps);
 }
 
-export async function createGoal(
-  userId: string,
-  input: CreateGoalInput
-): Promise<GoalWithSteps | null> {
+export async function createGoal(userId: string, input: CreateGoalInput): Promise<GoalWithSteps | null> {
   const { data, error } = await supabase
     .from("goals")
     .insert({ ...input, user_id: userId })
@@ -134,10 +110,7 @@ export async function createGoal(
   return attachSteps(data as Goal, []);
 }
 
-export async function updateGoal(
-  goalId: string,
-  updates: Partial<Goal>
-): Promise<{ error: string | null }> {
+export async function updateGoal(goalId: string, updates: Partial<Goal>): Promise<{ error: string | null }> {
   const { error } = await supabase
     .from("goals")
     .update(updates as Record<string, unknown>)
@@ -150,12 +123,7 @@ export async function deleteGoal(goalId: string): Promise<{ error: string | null
   return { error: error?.message ?? null };
 }
 
-// --- Steps ---
-
-export async function createStep(
-  userId: string,
-  input: CreateStepInput
-): Promise<Step | null> {
+export async function createStep(userId: string, input: CreateStepInput): Promise<Step | null> {
   const { data, error } = await supabase
     .from("steps")
     .insert({ ...input, user_id: userId })
@@ -168,10 +136,7 @@ export async function createStep(
   return data as Step;
 }
 
-export async function toggleStep(
-  stepId: string,
-  currentValue: boolean
-): Promise<{ error: string | null }> {
+export async function toggleStep(stepId: string, currentValue: boolean): Promise<{ error: string | null }> {
   const { error } = await supabase
     .from("steps")
     .update({ is_completed: !currentValue })
