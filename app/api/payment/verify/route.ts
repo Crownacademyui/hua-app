@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-export const dynamic = "force-dynamic";
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: NextRequest) {
-  // Guard: skip if env vars not set
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    return NextResponse.json({ success: false, error: "Missing environment variables" }, { status: 500 });
-  }
-
   try {
     const { reference, userId } = await req.json();
 
@@ -31,16 +30,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Payment not successful" }, { status: 400 });
     }
 
-    const amountPaid = paystackData.data.amount / 100;
+    const amountPaid = paystackData.data.amount / 100; // convert from kobo
 
-    // Dynamically import supabase to avoid build-time errors
-    const { createClient } = await import("@supabase/supabase-js");
-
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-
+    // Mark user as paid in profiles table
     const { error } = await supabaseAdmin
       .from("profiles")
       .update({
@@ -57,7 +49,6 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, amount: amountPaid });
-
   } catch (err) {
     console.error("Payment verify error:", err);
     return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });

@@ -21,17 +21,14 @@ export const metadata: Metadata = {
   title: "Hua — Goal Setting for African Freelancers",
   description: "Set goals, track progress, and build accountability habits. Built for African freelancers and small business owners.",
   icons: { icon: "/favicon.ico" },
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   openGraph: {
     title: "Hua — Goal Setting for African Freelancers",
     description: "Set goals that actually get done.",
     type: "website",
   },
 };
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${poppins.variable}`}>
