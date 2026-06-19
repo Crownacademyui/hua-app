@@ -67,7 +67,8 @@ export async function updateProfile(
 ): Promise<{ error: string | null }> {
   const { error } = await supabase
     .from("profiles")
-    .update(updates)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .update(updates as any)
     .eq("id", userId);
   return { error: error?.message ?? null };
 }
