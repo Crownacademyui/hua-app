@@ -9,6 +9,9 @@ import type {
   Profile,
 } from "@/types";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
+
 function computeProgress(steps: Step[]): number {
   if (steps.length === 0) return 0;
   const done = steps.filter((s) => s.is_completed).length;
@@ -49,7 +52,7 @@ export async function getCurrentUserId(): Promise<string | null> {
 }
 
 export async function fetchProfile(userId: string): Promise<Profile | null> {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("profiles")
     .select("*")
     .eq("id", userId)
@@ -65,9 +68,7 @@ export async function updateProfile(
   userId: string,
   updates: Record<string, unknown>
 ): Promise<{ error: string | null }> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const client = supabase as any;
-  const { error } = await client
+  const { error } = await db
     .from("profiles")
     .update(updates)
     .eq("id", userId);
@@ -76,8 +77,8 @@ export async function updateProfile(
 
 export async function fetchGoals(userId: string): Promise<GoalWithSteps[]> {
   const [goalsRes, stepsRes] = await Promise.all([
-    supabase.from("goals").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
-    supabase.from("steps").select("*").eq("user_id", userId),
+    db.from("goals").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
+    db.from("steps").select("*").eq("user_id", userId),
   ]);
   if (goalsRes.error) {
     console.error("fetchGoals error:", goalsRes.error.message);
@@ -90,8 +91,8 @@ export async function fetchGoals(userId: string): Promise<GoalWithSteps[]> {
 
 export async function fetchGoalById(goalId: string): Promise<GoalWithSteps | null> {
   const [goalRes, stepsRes] = await Promise.all([
-    supabase.from("goals").select("*").eq("id", goalId).single(),
-    supabase.from("steps").select("*").eq("goal_id", goalId).order("order_index"),
+    db.from("goals").select("*").eq("id", goalId).single(),
+    db.from("steps").select("*").eq("goal_id", goalId).order("order_index"),
   ]);
   if (goalRes.error || !goalRes.data) return null;
   const goal = goalRes.data as Goal;
@@ -100,7 +101,7 @@ export async function fetchGoalById(goalId: string): Promise<GoalWithSteps | nul
 }
 
 export async function createGoal(userId: string, input: CreateGoalInput): Promise<GoalWithSteps | null> {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("goals")
     .insert({ ...input, user_id: userId })
     .select()
@@ -113,20 +114,20 @@ export async function createGoal(userId: string, input: CreateGoalInput): Promis
 }
 
 export async function updateGoal(goalId: string, updates: Partial<Goal>): Promise<{ error: string | null }> {
-  const { error } = await supabase
+  const { error } = await db
     .from("goals")
-    .update(updates as Record<string, unknown>)
+    .update(updates)
     .eq("id", goalId);
   return { error: error?.message ?? null };
 }
 
 export async function deleteGoal(goalId: string): Promise<{ error: string | null }> {
-  const { error } = await supabase.from("goals").delete().eq("id", goalId);
+  const { error } = await db.from("goals").delete().eq("id", goalId);
   return { error: error?.message ?? null };
 }
 
 export async function createStep(userId: string, input: CreateStepInput): Promise<Step | null> {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("steps")
     .insert({ ...input, user_id: userId })
     .select()
@@ -139,7 +140,7 @@ export async function createStep(userId: string, input: CreateStepInput): Promis
 }
 
 export async function toggleStep(stepId: string, currentValue: boolean): Promise<{ error: string | null }> {
-  const { error } = await supabase
+  const { error } = await db
     .from("steps")
     .update({ is_completed: !currentValue })
     .eq("id", stepId);
@@ -148,14 +149,14 @@ export async function toggleStep(stepId: string, currentValue: boolean): Promise
 
 export async function updateStep(input: UpdateStepInput): Promise<{ error: string | null }> {
   const { id, ...updates } = input;
-  const { error } = await supabase
+  const { error } = await db
     .from("steps")
-    .update(updates as Record<string, unknown>)
+    .update(updates)
     .eq("id", id);
   return { error: error?.message ?? null };
 }
 
 export async function deleteStep(stepId: string): Promise<{ error: string | null }> {
-  const { error } = await supabase.from("steps").delete().eq("id", stepId);
+  const { error } = await db.from("steps").delete().eq("id", stepId);
   return { error: error?.message ?? null };
 }
