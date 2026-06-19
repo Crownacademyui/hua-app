@@ -65,10 +65,11 @@ export async function updateProfile(
   userId: string,
   updates: Record<string, unknown>
 ): Promise<{ error: string | null }> {
-  const { error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const client = supabase as any;
+  const { error } = await client
     .from("profiles")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .update(updates as any)
+    .update(updates)
     .eq("id", userId);
   return { error: error?.message ?? null };
 }
