@@ -1,0 +1,50 @@
+/* ─── Mobile Responsive additions ───────────────────────────────────────────── */
+/* Add these to the bottom of globals.css */
+
+@media (max-width: 1024px) {
+  div[style*="grid-template-columns: 1fr 340px"],
+  div[style*="grid-template-columns: 1fr 280px"] {
+    grid-template-columns: 1fr !important;
+  }
+  div[style*="repeat(auto-fit, minmax(180px"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 16px !important;
+  }
+  header {
+    padding: 0 16px !important;
+  }
+  div[style*="minmax(300px"] {
+    grid-template-columns: 1fr !important;
+  }
+  div[style*="repeat(3, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  div[style*="repeat(auto-fit, minmax(180px"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  .auth-left-panel {
+    display: none !important;
+  }
+  .notifications-panel {
+    width: calc(100vw - 32px) !important;
+    right: -60px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  div[style*="padding: 48px"] {
+    padding: 24px !important;
+  }
+  div[style*="font-size: 68px"],
+  h1[style*="font-size"] {
+    font-size: 32px !important;
+  }
+}
