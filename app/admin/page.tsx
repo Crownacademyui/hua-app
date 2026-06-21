@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
+const db = supabase as any;
+
 const ADMIN_PASSWORD = "huaadmin2025";
 
 interface PendingUser {
@@ -29,7 +31,7 @@ export default function AdminPage() {
 
   async function fetchUsers() {
     setLoading(true);
-    const result = await supabase
+    const result = await db
       .from("profiles")
       .select("id, email, full_name, has_paid, created_at")
       .order("created_at", { ascending: false });
@@ -41,7 +43,7 @@ export default function AdminPage() {
   }
 
   async function approveUser(userId: string, email: string) {
-    const result = await supabase
+    const result = await db
       .from("profiles")
       .update({
         has_paid: true,
@@ -66,7 +68,7 @@ export default function AdminPage() {
     if (!confirmed) {
       return;
     }
-    const result = await supabase
+    const result = await db
       .from("profiles")
       .update({ has_paid: false })
       .eq("id", userId);
