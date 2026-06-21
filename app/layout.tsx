@@ -20,7 +20,14 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Hua — Goal Setting for African Freelancers",
   description: "Set goals, track progress, and build accountability habits. Built for African freelancers and small business owners.",
-  icons: { icon: "/favicon.ico" },
+  icons: {
+  icon: [
+    { url: "/favicon.ico" },
+    { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+  ],
+  apple: "/apple-touch-icon.png",
+},
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   openGraph: {
     title: "Hua — Goal Setting for African Freelancers",
