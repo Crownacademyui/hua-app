@@ -10,26 +10,29 @@ import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
-  const signIn = useAuthStore((s) => s.signIn);
+  const signIn = useAuthStore(function (s) { return s.signIn; });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [resetMessage, setResetMessage] = useState<string | null>(null);
+  const [error, setError] = useState(null);
+  const [resetMessage, setResetMessage] = useState(null);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!email || !password) { setError("Please fill in all fields."); return; }
+    if (!email || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
-    const { error: authError } = await signIn(email, password);
+    const result = await signIn(email, password);
     setIsLoading(false);
 
-    if (authError) {
-      setError(authError);
+    if (result.error) {
+      setError(result.error);
     } else {
       router.push("/dashboard");
     }
@@ -41,11 +44,11 @@ export default function LoginPage() {
       return;
     }
     setError(null);
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/login`,
+    const result = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + "/auth/login",
     });
-    if (resetError) {
-      setError(resetError.message);
+    if (result.error) {
+      setError(result.error.message);
     } else {
       setResetMessage("Password reset link sent! Check your email.");
     }
@@ -59,17 +62,17 @@ export default function LoginPage() {
         <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>Welcome back 👋</h1>
         <p style={{ color: "rgba(255,255,255,0.5)", marginBottom: 32, fontSize: 15 }}>Sign in to continue your journey</p>
 
-        {error && (
+        {error ? (
           <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "#ef4444" }}>
             {error}
           </div>
-        )}
+        ) : null}
 
-        {resetMessage && (
+        {resetMessage ? (
           <div style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "#22c55e" }}>
             {resetMessage}
           </div>
-        )}
+        ) : null}
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <FormField label="Email address">
@@ -77,7 +80,7 @@ export default function LoginPage() {
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6" />
               </svg>
-              <input className="input-field" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} required />
+              <input className="input-field" type="email" placeholder="you@example.com" value={email} onChange={function (e) { setEmail(e.target.value); }} style={inputStyle} required />
             </div>
           </FormField>
 
@@ -86,8 +89,8 @@ export default function LoginPage() {
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
                 <path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
-              <input className="input-field" type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} style={{ ...inputStyle, paddingRight: 40 }} required />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.4)", display: "flex" }}>
+              <input className="input-field" type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={function (e) { setPassword(e.target.value); }} style={{ ...inputStyle, paddingRight: 40 }} required />
+              <button type="button" onClick={function () { setShowPassword(!showPassword); }} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.4)", display: "flex" }}>
                 <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 12m-3 0a3 3 0 1 0 6 0 3 3 0 0 0-6 0" /></svg>
               </button>
             </div>
@@ -96,4 +99,16 @@ export default function LoginPage() {
             </div>
           </FormField>
 
-          <button
+          <button type="submit" className="btn-primary" disabled={isLoading} style={{ padding: "14px", fontSize: 15, width: "100%", justifyContent: "center", borderRadius: 12, marginTop: 4 }}>
+            {isLoading ? <Spinner size={18} /> : "Sign in to Hua"}
+          </button>
+
+          <p style={{ textAlign: "center", fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
+            Don't have an account?{" "}
+            <Link href="/auth/signup" style={{ color: "#FFA500", fontWeight: 600, textDecoration: "none" }}>Sign up</Link>
+          </p>
+        </form>
+      </div>
+    </AuthShell>
+  );
+}
