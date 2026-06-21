@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 
+const SELAR_LINK_FULL = "https://selar.com/835wz73l3p";
+const SELAR_LINK_STUDENT = "https://selar.com/52x2342270";
+
 const LAUNCH_PRICE = 5000;
 const STUDENT_PRICE = 3000;
 const COUPON_CODE = "HUASTUDENT";
-const PAYSTACK_PUBLIC_KEY = "pk_test_871f16c855e80abcc15a5f601104096186f50d0e";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -15,10 +17,10 @@ export default function PaymentPage() {
   const [coupon, setCoupon] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [couponError, setCouponError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const price = appliedCoupon ? STUDENT_PRICE : LAUNCH_PRICE;
   const savings = LAUNCH_PRICE - STUDENT_PRICE;
+  const selarLink = appliedCoupon ? SELAR_LINK_STUDENT : SELAR_LINK_FULL;
 
   function applyCoupon() {
     if (coupon.trim().toUpperCase() === COUPON_CODE) {
@@ -36,47 +38,8 @@ export default function PaymentPage() {
     setCouponError("");
   }
 
-  function initializePayment() {
-    if (typeof window === "undefined") return;
-    setIsLoading(true);
-
-    // Load Paystack inline script dynamically
-    const script = document.createElement("script");
-    script.src = "https://js.paystack.co/v1/inline.js";
-    script.onload = () => {
-      const handler = (window as any).PaystackPop.setup({
-        key: PAYSTACK_PUBLIC_KEY,
-        email: user?.email ?? "",
-        amount: price * 100, // Paystack uses kobo
-        currency: "NGN",
-        ref: `HUA-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-        metadata: {
-          user_id: user?.id,
-          coupon_used: appliedCoupon ? COUPON_CODE : null,
-          price_paid: price,
-        },
-        onSuccess: async (transaction: any) => {
-          // Verify payment on server
-          const res = await fetch("/api/payment/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reference: transaction.reference, userId: user?.id }),
-          });
-          const data = await res.json();
-          if (data.success) {
-            router.push("/dashboard");
-          } else {
-            alert("Payment verification failed. Please contact support.");
-          }
-          setIsLoading(false);
-        },
-        onCancel: () => {
-          setIsLoading(false);
-        },
-      });
-      handler.openIframe();
-    };
-    document.body.appendChild(script);
+  function goToSelar() {
+    window.open(selarLink, "_blank");
   }
 
   return (
@@ -131,7 +94,7 @@ export default function PaymentPage() {
                   value={coupon}
                   onChange={(e) => { setCoupon(e.target.value.toUpperCase()); setCouponError(""); }}
                   placeholder="Enter code"
-                  style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: `1px solid ${couponError ? "#ef4444" : "rgba(255,255,255,0.08)"}`, borderRadius: 10, color: "#fff", fontFamily: "'Poppins', sans-serif", fontSize: 14, padding: "10px 14px", outline: "none" }}
+                  style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: `1px solid ${couponError ? "#ef4444" : "rgba(255,255,255,0.08)"}`, borderRadius: 10, color: "#fff", fontSize: 14, padding: "10px 14px", outline: "none" }}
                   onKeyDown={(e) => e.key === "Enter" && applyCoupon()}
                 />
                 <button onClick={applyCoupon} style={{ padding: "10px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap" }}>
@@ -165,33 +128,27 @@ export default function PaymentPage() {
                 )}
               </div>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <span style={{ fontSize: 11, background: "rgba(255,165,0,0.15)", color: "#FFA500", padding: "4px 10px", borderRadius: 100, fontWeight: 600 }}>
-                LIFETIME
-              </span>
-            </div>
+            <span style={{ fontSize: 11, background: "rgba(255,165,0,0.15)", color: "#FFA500", padding: "4px 10px", borderRadius: 100, fontWeight: 600 }}>
+              LIFETIME
+            </span>
           </div>
 
           {/* Pay button */}
           <button
-            onClick={initializePayment}
-            disabled={isLoading}
-            style={{ width: "100%", padding: "16px", background: "linear-gradient(135deg, #FFA500, #ff8c00)", border: "none", borderRadius: 12, color: "#000", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 16, cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1, transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+            onClick={goToSelar}
+            style={{ width: "100%", padding: "16px", background: "linear-gradient(135deg, #FFA500, #ff8c00)", border: "none", borderRadius: 12, color: "#000", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
           >
-            {isLoading ? (
-              <>
-                <div style={{ width: 18, height: 18, border: "2px solid rgba(0,0,0,0.3)", borderTopColor: "#000", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                Processing...
-              </>
-            ) : (
-              <>
-                🔒 Pay ₦{price.toLocaleString()} — Get Access
-              </>
-            )}
+            🔒 Pay ₦{price.toLocaleString()} on Selar
           </button>
 
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "12px 16px", marginTop: 16 }}>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
+              <strong style={{ color: "#FFA500" }}>How it works:</strong> Click the button above to pay securely on Selar. After payment, your account will be activated within a few hours. Use the <strong>same email</strong> you signed up with on Hua.
+            </p>
+          </div>
+
           <p style={{ textAlign: "center", fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 16, lineHeight: 1.5 }}>
-            Secured by Paystack. Accepts cards, bank transfer & USSD.
+            Secured by Selar. Accepts cards, bank transfer & USSD.
           </p>
         </div>
 
@@ -203,8 +160,6 @@ export default function PaymentPage() {
           </button>
         </p>
       </div>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
