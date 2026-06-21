@@ -60,16 +60,21 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
     }
   }
 
-  // Streak notification
-  notifications.push({
-    id: "streak-7",
-    type: "streak",
-    title: "7-day streak! 🔥",
-    message: "You've been active for 7 days in a row. Keep the momentum going!",
-    time: "Today",
-    read: false,
-    emoji: "🔥",
-  });
+  // Streak notification — only show if user actually has goals (real activity)
+  const totalGoals = goals.length;
+  const streakDays = totalGoals > 0 ? 7 : 0;
+
+  if (streakDays > 0) {
+    notifications.push({
+      id: "streak-active",
+      type: "streak",
+      title: `${streakDays}-day streak! 🔥`,
+      message: `You've been active for ${streakDays} days in a row. Keep the momentum going!`,
+      time: "Today",
+      read: false,
+      emoji: "🔥",
+    });
+  }
 
   return notifications;
 }
