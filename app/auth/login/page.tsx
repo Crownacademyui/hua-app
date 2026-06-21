@@ -12,12 +12,12 @@ export default function LoginPage() {
   const router = useRouter();
   const signIn = useAuthStore(function (s) { return s.signIn; });
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [resetMessage, setResetMessage] = useState(null);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -80,7 +80,15 @@ export default function LoginPage() {
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6" />
               </svg>
-              <input className="input-field" type="email" placeholder="you@example.com" value={email} onChange={function (e: React.ChangeEvent<HTMLInputElement>) { setEmail(e.target.value); }} style={inputStyle} required />
+              <input
+                className="input-field"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={function (e: React.ChangeEvent<HTMLInputElement>) { setEmail(e.target.value); }}
+                style={inputStyle}
+                required
+              />
             </div>
           </FormField>
 
@@ -89,8 +97,20 @@ export default function LoginPage() {
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
                 <path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
-              <input className="input-field" type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={function (e: React.ChangeEvent<HTMLInputElement>) { setPassword(e.target.value); }} style={{ ...inputStyle, paddingRight: 40 }} required />
-              <button type="button" onClick={function () { setShowPassword(!showPassword); }} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.4)", display: "flex" }}>
+              <input
+                className="input-field"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={password}
+                onChange={function (e: React.ChangeEvent<HTMLInputElement>) { setPassword(e.target.value); }}
+                style={{ ...inputStyle, paddingRight: 40 }}
+                required
+              />
+              <button
+                type="button"
+                onClick={function () { setShowPassword(!showPassword); }}
+                style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.4)", display: "flex" }}
+              >
                 <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 12m-3 0a3 3 0 1 0 6 0 3 3 0 0 0-6 0" /></svg>
               </button>
             </div>
