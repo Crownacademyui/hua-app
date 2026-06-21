@@ -42,6 +42,9 @@ export default function DashboardPage() {
   const { active, completed, avgProgress } = useDashboardStats();
   const [showCreate, setShowCreate] = useState(false);
 
+  const totalGoals = active.length + completed.length;
+  const streakDays = totalGoals > 0 ? 7 : 0; // placeholder logic until real daily check-in tracking is built
+
   const greeting = () => {
     const h = new Date().getHours();
     if (h < 12) return "Good morning";
@@ -81,10 +84,16 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16 }}>
-        <StatCard label="Active Goals" value={active.length} icon="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" color="#FFA500" delta={20} />
-        <StatCard label="Completed Goals" value={completed.length} icon="M6 9H4.5a2.5 2.5 0 0 1 0-5H6 M18 9h1.5a2.5 2.5 0 0 0 0-5H18 M4 22h16 M18 2H6v7a6 6 0 0 0 12 0V2z" color="#22c55e" delta={8} />
+        <StatCard label="Active Goals" value={active.length} icon="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" color="#FFA500" />
+        <StatCard label="Completed Goals" value={completed.length} icon="M6 9H4.5a2.5 2.5 0 0 1 0-5H6 M18 9h1.5a2.5 2.5 0 0 0 0-5H18 M4 22h16 M18 2H6v7a6 6 0 0 0 12 0V2z" color="#22c55e" />
         <StatCard label="Avg Progress" value={`${avgProgress}%`} sub="across all goals" icon="M18 20V10 M12 20V4 M6 20v-6" color="#8b5cf6" />
-        <StatCard label="Day Streak" value="7 🔥" sub="Keep it up!" icon="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z" color="#f97316" />
+        <StatCard
+          label="Day Streak"
+          value={streakDays > 0 ? `${streakDays} 🔥` : "0"}
+          sub={streakDays > 0 ? "Keep it up!" : "Create a goal to start"}
+          icon="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"
+          color="#f97316"
+        />
       </div>
 
       {/* Main Grid */}
@@ -124,16 +133,24 @@ export default function DashboardPage() {
         {/* Right sidebar */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Streak Card */}
-          <div className="card" style={{ padding: 20, background: "linear-gradient(135deg, rgba(255,165,0,0.08), rgba(2,6,111,0.3))", border: "1px solid rgba(255,165,0,0.2)", textAlign: "center" }}>
-            <div style={{ fontSize: 40, marginBottom: 8 }}>🔥</div>
-            <h3 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>7-Day Streak!</h3>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 16 }}>You've checked in 7 days in a row. Keep the fire burning!</p>
-            <div style={{ display: "flex", justifyContent: "center", gap: 6 }}>
-              {Array.from({ length: 7 }).map((_, i) => (
-                <div key={i} style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,165,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>✓</div>
-              ))}
+          {streakDays > 0 ? (
+            <div className="card" style={{ padding: 20, background: "linear-gradient(135deg, rgba(255,165,0,0.08), rgba(2,6,111,0.3))", border: "1px solid rgba(255,165,0,0.2)", textAlign: "center" }}>
+              <div style={{ fontSize: 40, marginBottom: 8 }}>🔥</div>
+              <h3 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>{streakDays}-Day Streak!</h3>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 16 }}>You've checked in {streakDays} days in a row. Keep the fire burning!</p>
+              <div style={{ display: "flex", justifyContent: "center", gap: 6 }}>
+                {Array.from({ length: streakDays }).map((_, i) => (
+                  <div key={i} style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,165,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>✓</div>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="card" style={{ padding: 20, textAlign: "center" }}>
+              <div style={{ fontSize: 40, marginBottom: 8 }}>👋</div>
+              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>No streak yet</h3>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>Create your first goal to start building a streak!</p>
+            </div>
+          )}
 
           {/* Completed goals */}
           {completed.length > 0 && (

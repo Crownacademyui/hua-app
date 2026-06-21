@@ -22,6 +22,11 @@ export function Sidebar({ collapsed }: SidebarProps) {
   const signOut = useAuthStore((s) => s.signOut);
   const goals = useGoalStore((s) => s.goals);
   const activeCount = goals.filter((g) => g.status === "active").length;
+  const completedCount = goals.filter((g) => g.status === "completed").length;
+  const totalGoals = goals.length;
+
+  // Placeholder streak logic until real daily check-in tracking is built
+  const streakDays = totalGoals > 0 ? 7 : 0;
 
   return (
     <aside style={{ width: collapsed ? 64 : 240, flexShrink: 0, height: "100vh", position: "fixed", left: 0, top: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.08)", transition: "width 0.3s ease", zIndex: 100, overflow: "hidden", background: "linear-gradient(180deg, rgba(2,6,111,0.6) 0%, rgba(10,15,60,0.95) 100%)", backdropFilter: "blur(20px)" }}>
@@ -64,9 +69,18 @@ export function Sidebar({ collapsed }: SidebarProps) {
       {/* Bottom */}
       <div style={{ padding: "12px 10px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
         {!collapsed && (
-          <div style={{ padding: "12px 14px", background: "rgba(255,165,0,0.08)", borderRadius: 12, marginBottom: 8, border: "1px solid rgba(255,165,0,0.15)" }}>
-            <p style={{ fontSize: 11, color: "#FFA500", fontWeight: 600, marginBottom: 2 }}>🔥 7-day streak!</p>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Keep going, you're on fire</p>
+          <div style={{ padding: "12px 14px", background: streakDays > 0 ? "rgba(255,165,0,0.08)" : "rgba(255,255,255,0.04)", borderRadius: 12, marginBottom: 8, border: streakDays > 0 ? "1px solid rgba(255,165,0,0.15)" : "1px solid rgba(255,255,255,0.08)" }}>
+            {streakDays > 0 ? (
+              <>
+                <p style={{ fontSize: 11, color: "#FFA500", fontWeight: 600, marginBottom: 2 }}>🔥 {streakDays}-day streak!</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Keep going, you're on fire</p>
+              </>
+            ) : (
+              <>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", fontWeight: 600, marginBottom: 2 }}>👋 No streak yet</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Create a goal to get started</p>
+              </>
+            )}
           </div>
         )}
         <button onClick={signOut} title={collapsed ? "Log out" : ""}

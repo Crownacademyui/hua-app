@@ -6,16 +6,18 @@ import { useRouter } from "next/navigation";
 import { AuthShell } from "../AuthShell";
 import { useAuthStore } from "@/store/authStore";
 import { FormField, Spinner } from "@/components/ui";
+import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
   const signIn = useAuthStore((s) => s.signIn);
 
-  const [email, setEmail] = useState("amara@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -33,6 +35,22 @@ export default function LoginPage() {
     }
   }
 
+  async function handleForgotPassword() {
+    if (!email) {
+      setError("Please enter your email address first, then click 'Forgot password?'");
+      return;
+    }
+    setError(null);
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/login`,
+    });
+    if (resetError) {
+      setError(resetError.message);
+    } else {
+      setResetMessage("Password reset link sent! Check your email.");
+    }
+  }
+
   const inputStyle = { padding: "12px 14px 12px 40px" };
 
   return (
@@ -44,6 +62,12 @@ export default function LoginPage() {
         {error && (
           <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "#ef4444" }}>
             {error}
+          </div>
+        )}
+
+        {resetMessage && (
+          <div style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "#22c55e" }}>
+            {resetMessage}
           </div>
         )}
 
@@ -68,20 +92,8 @@ export default function LoginPage() {
               </button>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 6 }}>
-              <button type="button" style={{ background: "none", border: "none", fontSize: 13, color: "#FFA500", cursor: "pointer" }}>Forgot password?</button>
+              <button type="button" onClick={handleForgotPassword} style={{ background: "none", border: "none", fontSize: 13, color: "#FFA500", cursor: "pointer" }}>Forgot password?</button>
             </div>
           </FormField>
 
-          <button type="submit" className="btn-primary" disabled={isLoading} style={{ padding: "14px", fontSize: 15, width: "100%", justifyContent: "center", borderRadius: 12, marginTop: 4 }}>
-            {isLoading ? <Spinner size={18} /> : "Sign in to Hua"}
-          </button>
-
-          <p style={{ textAlign: "center", fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
-            Don't have an account?{" "}
-            <Link href="/auth/signup" style={{ color: "#FFA500", fontWeight: 600, textDecoration: "none" }}>Sign up free</Link>
-          </p>
-        </form>
-      </div>
-    </AuthShell>
-  );
-}
+          <button

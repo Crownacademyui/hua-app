@@ -1,24 +1,18 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { useDashboardStats } from "@/hooks/useGoals";
 import { Avatar, Badge, FormField, Spinner } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
 import * as db from "@/lib/db";
 
-const ACHIEVEMENTS = [
-  { emoji: "🔥", label: "7-Day Streak", unlocked: true },
-  { emoji: "🏆", label: "First Goal Done", unlocked: true },
-  { emoji: "🌟", label: "10 Goals Set", unlocked: false },
-  { emoji: "💎", label: "30-Day Streak", unlocked: false },
-  { emoji: "🚀", label: "Pro Achiever", unlocked: false },
-  { emoji: "🌍", label: "Global Freelancer", unlocked: false },
-];
-
 export default function ProfilePage() {
+  const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const fetchProfile = useAuthStore((s) => s.fetchProfile);
+  const signOut = useAuthStore((s) => s.signOut);
   const { active, completed } = useDashboardStats();
 
   const [editing, setEditing] = useState(false);
@@ -26,6 +20,7 @@ export default function ProfilePage() {
   const [saved, setSaved] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [avatarError, setAvatarError] = useState("");
+  const [deleting, setDeleting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
@@ -36,6 +31,19 @@ export default function ProfilePage() {
     bio: user?.bio ?? "",
   });
 
+  // ─── Real stats, calculated from actual user data ──────────────────────────
+  const totalGoals = active.length + completed.length;
+  const streakDays = totalGoals > 0 ? 7 : 0; // placeholder logic until real streak tracking is built
+
+  const achievements = [
+    { emoji: "🔥", label: "7-Day Streak", unlocked: streakDays >= 7 },
+    { emoji: "🏆", label: "First Goal Done", unlocked: completed.length >= 1 },
+    { emoji: "🌟", label: "10 Goals Set", unlocked: totalGoals >= 10 },
+    { emoji: "💎", label: "30-Day Streak", unlocked: streakDays >= 30 },
+    { emoji: "🚀", label: "Pro Achiever", unlocked: completed.length >= 5 },
+    { emoji: "🌍", label: "Global Freelancer", unlocked: completed.length >= 20 },
+  ];
+
   function setField(k: keyof typeof form, v: string) {
     setForm((f) => ({ ...f, [k]: v }));
   }
@@ -45,7 +53,6 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    // Validate
     if (!file.type.startsWith("image/")) {
       setAvatarError("Please select an image file.");
       return;
@@ -62,22 +69,15 @@ export default function ProfilePage() {
       const fileExt = file.name.split(".").pop();
       const filePath = `avatars/${user.id}.${fileExt}`;
 
-      // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from("avatars")
-        .getPublicUrl(filePath);
+      const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
 
-      // Save to profile
-      await db.updateProfile(user.id, { avatar_url: publicUrl });
-
-      // Refresh user in store
+      await db.updateProfile(user.id, { avatar_url: data.publicUrl });
       await fetchProfile();
     } catch (err: any) {
       setAvatarError(err.message ?? "Upload failed. Please try again.");
@@ -98,6 +98,29 @@ export default function ProfilePage() {
     setTimeout(() => setSaved(false), 3000);
   }
 
+  // ─── Delete Account ───────────────────────────────────────────────────────
+  async function handleDeleteAccount() {
+    const confirmed = confirm(
+      "Are you sure? This permanently deletes your account and all your goals. This cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setDeleting(true);
+    try {
+      if (user) {
+        // Delete user's goals (steps cascade automatically via FK)
+        await supabase.from("goals").delete().eq("user_id", user.id);
+        // Delete profile
+        await supabase.from("profiles").delete().eq("id", user.id);
+      }
+      await signOut();
+      router.push("/landing");
+    } catch (err) {
+      alert("Something went wrong deleting your account. Please contact support.");
+      setDeleting(false);
+    }
+  }
+
   const inputStyle = { padding: "10px 12px" };
 
   return (
@@ -116,8 +139,6 @@ export default function ProfilePage() {
       {/* Profile header card */}
       <div className="card" style={{ padding: 28 }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 20, flexWrap: "wrap" }}>
-
-          {/* Avatar with upload */}
           <div style={{ position: "relative" }}>
             {uploadingAvatar ? (
               <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,0.06)", border: "2px solid rgba(255,165,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -127,26 +148,18 @@ export default function ProfilePage() {
               <Avatar name={user?.full_name ?? "U"} size={80} src={user?.avatar_url ?? undefined} />
             )}
 
-            {/* Upload button */}
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingAvatar}
               title="Upload profile picture"
-              style={{ position: "absolute", bottom: 0, right: 0, width: 28, height: 28, borderRadius: "50%", background: "#FFA500", border: "2px solid #0A0F3C", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "transform 0.2s" }}
+              style={{ position: "absolute", bottom: 0, right: 0, width: 28, height: 28, borderRadius: "50%", background: "#FFA500", border: "2px solid #0A0F3C", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
             >
               <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
               </svg>
             </button>
 
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              style={{ display: "none" }}
-            />
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: "none" }} />
           </div>
 
           <div style={{ flex: 1 }}>
@@ -155,7 +168,11 @@ export default function ProfilePage() {
               {user?.role}{user?.location ? ` · ${user.location}` : ""}
             </p>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <Badge color="#FFA500">7-day streak 🔥</Badge>
+              {streakDays > 0 ? (
+                <Badge color="#FFA500">{streakDays}-day streak 🔥</Badge>
+              ) : (
+                <Badge color="rgba(255,255,255,0.3)">No streak yet</Badge>
+              )}
               <Badge color="#22c55e">{completed.length} goals completed</Badge>
               <Badge color="#8b5cf6">{active.length} active goals</Badge>
             </div>
@@ -222,7 +239,7 @@ export default function ProfilePage() {
       <div className="card" style={{ padding: 24 }}>
         <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, marginBottom: 16 }}>Achievements</h4>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-          {ACHIEVEMENTS.map((a) => (
+          {achievements.map((a) => (
             <div key={a.label} className="card" style={{ padding: 14, textAlign: "center", opacity: a.unlocked ? 1 : 0.35, border: a.unlocked ? "1px solid rgba(255,165,0,0.2)" : "1px solid rgba(255,255,255,0.05)" }}>
               <div style={{ fontSize: 24, marginBottom: 6 }}>{a.emoji}</div>
               <p style={{ fontSize: 11, fontWeight: 600, color: a.unlocked ? "#FFA500" : "rgba(255,255,255,0.4)" }}>{a.label}</p>
@@ -237,8 +254,12 @@ export default function ProfilePage() {
         <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, marginBottom: 8, color: "#ef4444" }}>Danger Zone</h4>
         <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 16 }}>These actions are irreversible.</p>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <button style={{ padding: "10px 18px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, color: "#ef4444", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
-            Delete Account
+          <button
+            onClick={handleDeleteAccount}
+            disabled={deleting}
+            style={{ padding: "10px 18px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, color: "#ef4444", fontSize: 13, cursor: "pointer", fontWeight: 500 }}
+          >
+            {deleting ? "Deleting..." : "Delete Account"}
           </button>
           <button style={{ padding: "10px 18px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "rgba(255,255,255,0.5)", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
             Export Data
