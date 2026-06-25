@@ -1,11 +1,12 @@
 "use client";
-import { supabase } from "@/lib/supabase";
+
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AuthShell } from "../AuthShell";
 import { useAuthStore } from "@/store/authStore";
 import { FormField, Spinner } from "@/components/ui";
+import { supabase } from "@/lib/supabase";
 
 const ROLES = [
   { value: "freelancer", label: "🎨 Freelancer" },
@@ -48,27 +49,28 @@ export default function SignupPage() {
     const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
     const { error: authError } = await signUp(email, password, fullName, role);
 
-if (authError) {
-  setIsLoading(false);
-  setError(authError);
-} else {
-  // Get user ID from Supabase to include in notification
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  // Send notification email to you
-  await fetch("/api/admin/notify", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: fullName,
-      email: email,
-      userId: user?.id ?? "",
-    }),
-  });
-
-  setIsLoading(false);
-  router.push("/payment");
-}
+    if (authError) {
+      setIsLoading(false);
+      setError(authError);
+    } else {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        await fetch("/api/admin/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: fullName,
+            email: email,
+            userId: user?.id ?? "",
+          }),
+        });
+      } catch (err) {
+        console.error("Notification failed:", err);
+      }
+      setIsLoading(false);
+      router.push("/payment");
+    }
+  }
 
   const inputStyle = { padding: "12px 14px" };
 
