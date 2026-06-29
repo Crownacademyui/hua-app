@@ -82,7 +82,7 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: from: "Hua App <crownstudios44@gmail.com>",
+        from: "Hua App <crownstudios44@gmail.com>",
         to: "crownstudios44@gmail.com",
         subject: `🔥 New signup: ${name} is waiting for access`,
         html,
