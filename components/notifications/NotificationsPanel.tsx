@@ -17,7 +17,6 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
   const notifications: Notification[] = [];
   const now = new Date();
 
-  // Admin notifications (hardcoded from you to users)
   notifications.push({
     id: "admin-welcome",
     type: "admin",
@@ -28,7 +27,6 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
     emoji: "📢",
   });
 
-  // Completed goals notifications
   const completedGoals = goals.filter((g) => g.status === "completed");
   for (const goal of completedGoals.slice(0, 3)) {
     notifications.push({
@@ -42,7 +40,6 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
     });
   }
 
-  // Deadline warnings (goals due in 7 days)
   const activeGoals = goals.filter((g) => g.status === "active" && g.deadline);
   for (const goal of activeGoals) {
     const deadline = new Date(goal.deadline);
@@ -60,7 +57,6 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
     }
   }
 
-  // Streak notification — only show if user actually has goals (real activity)
   const totalGoals = goals.length;
   const streakDays = totalGoals > 0 ? 7 : 0;
 
@@ -89,7 +85,6 @@ export function NotificationsPanel() {
     setNotifications(getNotificationsFromGoals(goals));
   }, [goals]);
 
-  // Close when clicking outside
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
@@ -115,6 +110,14 @@ export function NotificationsPanel() {
 
   return (
     <div ref={panelRef} style={{ position: "relative" }}>
+      {/* Backdrop overlay on mobile to dim background */}
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 290 }}
+        />
+      )}
+
       {/* Bell button */}
       <button
         onClick={() => { setOpen(!open); if (!open) markAllRead(); }}
@@ -132,23 +135,50 @@ export function NotificationsPanel() {
 
       {/* Panel */}
       {open && (
-        <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, width: 360, background: "#0d1544", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, boxShadow: "0 20px 60px rgba(0,0,0,0.5)", zIndex: 300, overflow: "hidden", animation: "fadeIn 0.2s ease" }}>
+        <div
+          style={{
+            position: "fixed",
+            top: 70,
+            right: 12,
+            left: 12,
+            maxWidth: 380,
+            marginLeft: "auto",
+            background: "#0d1544",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 16,
+            boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+            zIndex: 300,
+            overflow: "hidden",
+            animation: "fadeIn 0.2s ease",
+            maxHeight: "calc(100vh - 100px)",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {/* Header */}
-          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
             <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 15, color: "#fff" }}>
               Notifications
             </h3>
-            {notifications.some((n) => n.read === false) ? (
-              <button onClick={markAllRead} style={{ background: "none", border: "none", fontSize: 12, color: "#FFA500", cursor: "pointer", fontWeight: 500 }}>
-                Mark all read
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {notifications.some((n) => n.read === false) ? (
+                <button onClick={markAllRead} style={{ background: "none", border: "none", fontSize: 12, color: "#FFA500", cursor: "pointer", fontWeight: 500 }}>
+                  Mark all read
+                </button>
+              ) : (
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>All caught up</span>
+              )}
+              <button
+                onClick={() => setOpen(false)}
+                style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", display: "flex", padding: 0 }}
+              >
+                <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
-            ) : (
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>All caught up</span>
-            )}
+            </div>
           </div>
 
           {/* List */}
-          <div style={{ maxHeight: 380, overflowY: "auto" }}>
+          <div style={{ overflowY: "auto", flex: 1 }}>
             {notifications.length === 0 ? (
               <div style={{ padding: 40, textAlign: "center" }}>
                 <div style={{ fontSize: 40, marginBottom: 12 }}>🔔</div>
