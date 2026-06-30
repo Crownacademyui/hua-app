@@ -8,32 +8,32 @@ import { FormField, Spinner } from "@/components/ui";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [sessionReady, setSessionReady] = useState(false);
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [sessionReady, setSessionReady] = useState<boolean>(false);
 
   useEffect(() => {
     // Supabase automatically reads the reset token from the URL hash
     // and creates a temporary session for password reset
-    supabase.auth.onAuthStateChange(function (event, session) {
+    supabase.auth.onAuthStateChange(function (event: string) {
       if (event === "PASSWORD_RECOVERY") {
         setSessionReady(true);
       }
     });
 
     // Also check if session already exists (in case event fired before listener attached)
-    supabase.auth.getSession().then(function (result) {
+    supabase.auth.getSession().then(function (result: any) {
       if (result.data.session) {
         setSessionReady(true);
       }
     });
   }, []);
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
@@ -114,7 +114,7 @@ export default function ResetPasswordPage() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Min. 8 characters"
                     value={password}
-                    onChange={function (e) { setPassword(e.target.value); }}
+                    onChange={function (e: React.ChangeEvent<HTMLInputElement>) { setPassword(e.target.value); }}
                     style={{ ...inputStyle, paddingRight: 40 }}
                   />
                   <button
@@ -133,7 +133,7 @@ export default function ResetPasswordPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Re-enter password"
                   value={confirmPassword}
-                  onChange={function (e) { setConfirmPassword(e.target.value); }}
+                  onChange={function (e: React.ChangeEvent<HTMLInputElement>) { setConfirmPassword(e.target.value); }}
                   style={inputStyle}
                 />
               </FormField>
