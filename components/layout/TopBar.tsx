@@ -30,7 +30,7 @@ export function TopBar({ onToggleSidebar }: TopBarProps) {
     <header style={{ height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(10,15,60,0.8)", backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 50 }}>
       {/* Left */}
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <button onClick={onToggleSidebar} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex", padding: 6, borderRadius: 8 }}>
+        <button onClick={onToggleSidebar} style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", display: "flex", padding: 6, borderRadius: 8 }}>
           <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 12h18M3 6h18M3 18h18" />
           </svg>
@@ -43,7 +43,7 @@ export function TopBar({ onToggleSidebar }: TopBarProps) {
               <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z" />
             </svg>
           </div>
-          <h2 style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#fff" }}>{title}</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text)" }}>{title}</h2>
         </Link>
       </div>
 
@@ -59,7 +59,7 @@ export function TopBar({ onToggleSidebar }: TopBarProps) {
             <p style={{ fontSize: 13, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "#fff" }}>
               {user?.full_name ?? "User"}
             </p>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", textTransform: "capitalize" }}>
+            <p style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "capitalize" }}>
               {user?.role ?? "Freelancer"}
             </p>
           </div>
