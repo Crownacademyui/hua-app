@@ -13,7 +13,7 @@ export function ProgressBar({ value, color = "#FFA500", height = 6 }: ProgressBa
   return (
     <div
       style={{
-        background: "rgba(255,255,255,0.08)",
+        background: "rgba(0,0,0,0.06)",
         borderRadius: 100,
         overflow: "hidden",
         height,
@@ -102,6 +102,7 @@ export function Avatar({ name = "U", size = 36, src }: AvatarProps) {
         fontSize: size * 0.35,
         fontWeight: 700,
         fontFamily: "'Space Grotesk', sans-serif",
+        color: "#fff",
         flexShrink: 0,
         overflow: "hidden",
         border: "2px solid rgba(255,165,0,0.3)",
@@ -144,11 +145,11 @@ export function EmptyState({ emoji = "🎯", title, subtitle, action }: EmptySta
   return (
     <div style={{ textAlign: "center", padding: "48px 24px" }}>
       <div style={{ fontSize: 48, marginBottom: 16 }}>{emoji}</div>
-      <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 18, marginBottom: 8 }}>
+      <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 18, marginBottom: 8, color: "#1a1a2e" }}>
         {title}
       </h3>
       {subtitle && (
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 24, maxWidth: 320, margin: "0 auto 24px" }}>
+        <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 24, maxWidth: 320, margin: "0 auto 24px" }}>
           {subtitle}
         </p>
       )}
@@ -172,20 +173,20 @@ export function Modal({ open, onClose, title, children, maxWidth = 480 }: ModalP
     <div
       style={{
         position: "fixed", inset: 0,
-        background: "rgba(0,0,0,0.75)",
+        background: "rgba(0,0,0,0.5)",
         display: "flex", alignItems: "center", justifyContent: "center",
-        zIndex: 200, backdropFilter: "blur(10px)", padding: 24,
+        zIndex: 200, backdropFilter: "blur(6px)", padding: 24,
       }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
         className="card fade-in"
-        style={{ width: "100%", maxWidth, padding: 32, maxHeight: "90vh", overflowY: "auto" }}
+        style={{ width: "100%", maxWidth, padding: 32, maxHeight: "90vh", overflowY: "auto", background: "#fff" }}
       >
         {title && (
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-            <h3 style={{ fontSize: 20, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif" }}>{title}</h3>
-            <button onClick={onClose} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex", padding: 4, borderRadius: 6 }}>
+            <h3 style={{ fontSize: 20, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#1a1a2e" }}>{title}</h3>
+            <button onClick={onClose} style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer", display: "flex", padding: 4, borderRadius: 6 }}>
               <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
@@ -209,7 +210,7 @@ interface FormFieldProps {
 export function FormField({ label, error, children, required }: FormFieldProps) {
   return (
     <div>
-      <label style={{ fontSize: 13, fontWeight: 500, marginBottom: 6, display: "block", color: "rgba(255,255,255,0.8)" }}>
+      <label style={{ fontSize: 13, fontWeight: 500, marginBottom: 6, display: "block", color: "#374151" }}>
         {label}{required && <span style={{ color: "#FFA500", marginLeft: 2 }}>*</span>}
       </label>
       {children}

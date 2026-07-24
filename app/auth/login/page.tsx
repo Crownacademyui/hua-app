@@ -59,17 +59,17 @@ export default function LoginPage() {
   return (
     <AuthShell>
       <div style={{ width: "100%", maxWidth: 400 }} className="fade-in">
-        <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>Welcome back 👋</h1>
-        <p style={{ color: "rgba(255,255,255,0.5)", marginBottom: 32, fontSize: 15 }}>Sign in to continue your journey</p>
+        <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, color: "#1a1a2e" }}>Welcome back 👋</h1>
+        <p style={{ color: "#6b7280", marginBottom: 32, fontSize: 15 }}>Sign in to continue your journey</p>
 
         {error ? (
-          <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "#ef4444" }}>
+          <div style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "#ef4444" }}>
             {error}
           </div>
         ) : null}
 
         {resetMessage ? (
-          <div style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "#22c55e" }}>
+          <div style={{ background: "rgba(22,163,74,0.08)", border: "1px solid rgba(22,163,74,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "#16a34a" }}>
             {resetMessage}
           </div>
         ) : null}
@@ -77,7 +77,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <FormField label="Email address">
             <div style={{ position: "relative" }}>
-              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6" />
               </svg>
               <input
@@ -94,7 +94,7 @@ export default function LoginPage() {
 
           <FormField label="Password">
             <div style={{ position: "relative" }}>
-              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
                 <path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
               <input
@@ -109,13 +109,13 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={function () { setShowPassword(!showPassword); }}
-                style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.4)", display: "flex" }}
+                style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#9ca3af", display: "flex" }}
               >
                 <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 12m-3 0a3 3 0 1 0 6 0 3 3 0 0 0-6 0" /></svg>
               </button>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 6 }}>
-              <button type="button" onClick={handleForgotPassword} style={{ background: "none", border: "none", fontSize: 13, color: "#FFA500", cursor: "pointer" }}>Forgot password?</button>
+              <button type="button" onClick={handleForgotPassword} style={{ background: "none", border: "none", fontSize: 13, color: "#c2790a", cursor: "pointer" }}>Forgot password?</button>
             </div>
           </FormField>
 
@@ -123,9 +123,9 @@ export default function LoginPage() {
             {isLoading ? <Spinner size={18} /> : "Sign in to Hua"}
           </button>
 
-          <p style={{ textAlign: "center", fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
+          <p style={{ textAlign: "center", fontSize: 13, color: "#6b7280" }}>
             Don't have an account?{" "}
-            <Link href="/auth/signup" style={{ color: "#FFA500", fontWeight: 600, textDecoration: "none" }}>Sign up</Link>
+            <Link href="/auth/signup" style={{ color: "#c2790a", fontWeight: 600, textDecoration: "none" }}>Sign up</Link>
           </p>
         </form>
       </div>
