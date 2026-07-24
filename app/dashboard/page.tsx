@@ -9,6 +9,36 @@ import { GoalCard } from "@/components/goals/GoalCard";
 import { CreateGoalModal } from "@/components/goals/CreateGoalModal";
 import { useState } from "react";
 
+const TIPS_OF_THE_DAY = [
+  "Break your largest goal into weekly targets. Freelancers who do this are 3× more likely to hit their goals.",
+  "Send that invoice today, not next week. Cash flow waits for no one.",
+  "Your rate isn't just for today's work — it's for every hour you spent learning the skill. Charge accordingly.",
+  "One client isn't a business plan. Keep at least one lead warm even when you're fully booked.",
+  "Progress you can't see is progress you'll forget. Log a win today, even a small one.",
+  "Undercharging doesn't win loyalty — it just trains clients to expect less from you.",
+  "A goal without a deadline is just a wish. Set one, even a rough one.",
+  "Save before you spend. Even ₦2,000 a week adds up faster than you think.",
+  "Done today beats perfect someday. Ship the draft, refine it later.",
+  "Your network is your net worth. Reach out to one past client this week.",
+  "Consistency beats intensity. Ten minutes daily on a goal outperforms one long push a month.",
+  "Raise your rates before you're overwhelmed, not after you're burnt out.",
+  "Write your invoice terms clearly upfront — it saves the awkward chase later.",
+  "Rest is part of the work. A tired freelancer makes expensive mistakes.",
+  "Track where your hours actually go for one week. It'll surprise you.",
+  "Every 'no' from a client is data, not a verdict on your worth.",
+  "Automate the boring stuff — reminders, invoices, follow-ups — so you can focus on the craft.",
+  "A portfolio piece done well brings more clients than ten cold pitches.",
+  "Set a goal you're a little scared of. Comfortable goals rarely stretch you.",
+  "Celebrate the milestone before you rush to the next one. You earned it.",
+];
+
+function getTipOfTheDay(): string {
+  const startOfYear = new Date(new Date().getFullYear(), 0, 0);
+  const diff = Date.now() - startOfYear.getTime();
+  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+  return TIPS_OF_THE_DAY[dayOfYear % TIPS_OF_THE_DAY.length];
+}
+
 function StatCard({ label, value, sub, icon, color = "#FFA500" }: {
   label: string; value: string | number; sub?: string;
   icon: string; color?: string;
@@ -39,6 +69,7 @@ export default function DashboardPage() {
 
   const totalGoals = active.length + completed.length;
   const streakDays = totalGoals > 0 ? 7 : 0;
+  const tipOfTheDay = getTipOfTheDay();
 
   const greeting = () => {
     const h = new Date().getHours();
@@ -165,7 +196,7 @@ export default function DashboardPage() {
               <span style={{ fontSize: 18 }}>💡</span>
               <div>
                 <p style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: "#1a1a2e" }}>Tip of the day</p>
-                <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6 }}>Break your largest goal into weekly targets. Freelancers who do this are 3× more likely to hit their goals.</p>
+                <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6 }}>{tipOfTheDay}</p>
               </div>
             </div>
           </div>
