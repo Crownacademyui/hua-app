@@ -65,8 +65,8 @@ export function StepList({ goalId, steps }: StepListProps) {
               display: "flex", alignItems: "center", gap: 12,
               padding: "12px 14px",
               borderRadius: 10, cursor: "default",
-              background: step.is_completed ? "rgba(34,197,94,0.05)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${step.is_completed ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.07)"}`,
+              background: step.is_completed ? "rgba(22,163,74,0.06)" : "#fafaf9",
+              border: `1px solid ${step.is_completed ? "rgba(22,163,74,0.25)" : "rgba(0,0,0,0.07)"}`,
               transition: "all 0.2s",
             }}
           >
@@ -76,8 +76,8 @@ export function StepList({ goalId, steps }: StepListProps) {
               disabled={togglingId === step.id}
               style={{
                 width: 22, height: 22, borderRadius: "50%",
-                border: `2px solid ${step.is_completed ? "#22c55e" : "rgba(255,255,255,0.2)"}`,
-                background: step.is_completed ? "#22c55e" : "transparent",
+                border: `2px solid ${step.is_completed ? "#16a34a" : "rgba(0,0,0,0.2)"}`,
+                background: step.is_completed ? "#16a34a" : "transparent",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 flexShrink: 0, cursor: "pointer", transition: "all 0.2s",
                 padding: 0,
@@ -104,8 +104,8 @@ export function StepList({ goalId, steps }: StepListProps) {
                   if (e.key === "Escape") { setEditingId(null); }
                 }}
                 style={{
-                  flex: 1, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,165,0,0.4)",
-                  borderRadius: 6, color: "#fff", fontFamily: "'Poppins', sans-serif", fontSize: 14,
+                  flex: 1, background: "#fff", border: "1px solid rgba(255,165,0,0.4)",
+                  borderRadius: 6, color: "#1a1a2e", fontFamily: "'Poppins', sans-serif", fontSize: 14,
                   padding: "4px 8px", outline: "none",
                 }}
               />
@@ -114,7 +114,7 @@ export function StepList({ goalId, steps }: StepListProps) {
                 onDoubleClick={() => { setEditingId(step.id); setEditTitle(step.title); }}
                 style={{
                   flex: 1, fontSize: 14,
-                  color: step.is_completed ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.9)",
+                  color: step.is_completed ? "#9ca3af" : "#1a1a2e",
                   textDecoration: step.is_completed ? "line-through" : "none",
                   transition: "all 0.2s", cursor: "default",
                 }}
@@ -128,7 +128,7 @@ export function StepList({ goalId, steps }: StepListProps) {
             <button
               onClick={() => handleDelete(step.id)}
               style={{
-                background: "none", border: "none", color: "rgba(255,255,255,0.2)",
+                background: "none", border: "none", color: "#9ca3af",
                 cursor: "pointer", display: "flex", padding: 4, borderRadius: 6,
                 opacity: 0, transition: "opacity 0.15s",
               }}
@@ -145,7 +145,7 @@ export function StepList({ goalId, steps }: StepListProps) {
 
       {/* Empty state */}
       {steps.length === 0 && !isAdding && (
-        <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(255,255,255,0.3)", fontSize: 13 }}>
+        <div style={{ textAlign: "center", padding: "24px 0", color: "#9ca3af", fontSize: 13 }}>
           No steps yet. Add your first step below.
         </div>
       )}
@@ -161,8 +161,8 @@ export function StepList({ goalId, steps }: StepListProps) {
             placeholder="Step title…"
             onKeyDown={(e) => { if (e.key === "Escape") setIsAdding(false); }}
             style={{
-              flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,165,0,0.4)",
-              borderRadius: 10, color: "#fff", fontFamily: "'Poppins', sans-serif", fontSize: 14,
+              flex: 1, background: "#fff", border: "1px solid rgba(255,165,0,0.4)",
+              borderRadius: 10, color: "#1a1a2e", fontFamily: "'Poppins', sans-serif", fontSize: 14,
               padding: "10px 14px", outline: "none",
             }}
           />
@@ -192,7 +192,7 @@ export function StepList({ goalId, steps }: StepListProps) {
         </button>
       )}
 
-      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 8 }}>
+      <p style={{ fontSize: 11, color: "#9ca3af", marginTop: 8 }}>
         Tip: Double-click any step to rename it
       </p>
     </div>
