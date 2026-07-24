@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useGoalStore } from "@/store/goalStore";
+import { useAuthStore } from "@/store/authStore";
 
 interface Notification {
   id: string;
@@ -13,8 +14,8 @@ interface Notification {
   emoji: string;
 }
 
-function getNotificationsFromGoals(goals: any[]): Notification[] {
-  const notifications: Notification[] = [];
+function getNotificationsFromGoals(goals: any[]): Omit<Notification, "read">[] {
+  const notifications: Omit<Notification, "read">[] = [];
   const now = new Date();
 
   notifications.push({
@@ -23,7 +24,6 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
     title: "Welcome to Hua! 🔥",
     message: "Start by creating your first goal. Break it into steps and track your progress daily.",
     time: "From the Hua team",
-    read: false,
     emoji: "📢",
   });
 
@@ -35,7 +35,6 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
       title: "Goal completed! 🏆",
       message: `You completed "${goal.title}". Amazing work!`,
       time: "Recent",
-      read: false,
       emoji: "🏆",
     });
   }
@@ -46,12 +45,11 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
     const daysLeft = Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     if (daysLeft <= 7 && daysLeft > 0) {
       notifications.push({
-        id: `deadline-${goal.id}`,
+        id: `deadline-${goal.id}-${daysLeft}`,
         type: "deadline",
         title: "Deadline approaching ⏰",
         message: `"${goal.title}" is due in ${daysLeft} day${daysLeft === 1 ? "" : "s"}.`,
         time: `${daysLeft} days left`,
-        read: false,
         emoji: "⏰",
       });
     }
@@ -62,12 +60,11 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
 
   if (streakDays > 0) {
     notifications.push({
-      id: "streak-active",
+      id: `streak-active-${streakDays}`,
       type: "streak",
       title: `${streakDays}-day streak! 🔥`,
       message: `You've been active for ${streakDays} days in a row. Keep the momentum going!`,
       time: "Today",
-      read: false,
       emoji: "🔥",
     });
   }
@@ -75,15 +72,42 @@ function getNotificationsFromGoals(goals: any[]): Notification[] {
   return notifications;
 }
 
+// ─── Read-state persistence (per user, survives reload/relogin) ──────────────
+function storageKey(userId?: string) {
+  return `hua_read_notifications_${userId ?? "anon"}`;
+}
+
+function getReadIds(userId?: string): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = window.localStorage.getItem(storageKey(userId));
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+function saveReadIds(userId: string | undefined, ids: Set<string>) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(storageKey(userId), JSON.stringify(Array.from(ids)));
+  } catch {
+    // ignore storage errors (e.g. private browsing)
+  }
+}
+
 export function NotificationsPanel() {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const goals = useGoalStore((s) => s.goals);
+  const user = useAuthStore((s) => s.user);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setNotifications(getNotificationsFromGoals(goals));
-  }, [goals]);
+    const base = getNotificationsFromGoals(goals);
+    const readIds = getReadIds(user?.id);
+    setNotifications(base.map((n) => ({ ...n, read: readIds.has(n.id) })));
+  }, [goals, user?.id]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -96,7 +120,12 @@ export function NotificationsPanel() {
   }, [open]);
 
   function markAllRead() {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    setNotifications((prev) => {
+      const updated = prev.map((n) => ({ ...n, read: true }));
+      const readIds = new Set(updated.map((n) => n.id));
+      saveReadIds(user?.id, readIds);
+      return updated;
+    });
   }
 
   const unreadCount = notifications.filter((n) => !n.read).length;
