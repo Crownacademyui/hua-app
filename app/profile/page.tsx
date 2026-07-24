@@ -126,12 +126,12 @@ export default function ProfilePage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 700 }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>Profile</h2>
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>Manage your account and preferences</p>
+        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4, color: "#1a1a2e" }}>Profile</h2>
+        <p style={{ fontSize: 14, color: "#6b7280" }}>Manage your account and preferences</p>
       </div>
 
       {saved && (
-        <div style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "12px 16px", fontSize: 13, color: "#22c55e" }}>
+        <div style={{ background: "rgba(22,163,74,0.08)", border: "1px solid rgba(22,163,74,0.2)", borderRadius: 10, padding: "12px 16px", fontSize: 13, color: "#16a34a" }}>
           ✓ Profile saved successfully
         </div>
       )}
@@ -141,7 +141,7 @@ export default function ProfilePage() {
         <div style={{ display: "flex", alignItems: "flex-start", gap: 20, flexWrap: "wrap" }}>
           <div style={{ position: "relative" }}>
             {uploadingAvatar ? (
-              <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,0.06)", border: "2px solid rgba(255,165,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(0,0,0,0.04)", border: "2px solid rgba(255,165,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <Spinner size={24} />
               </div>
             ) : (
@@ -152,7 +152,7 @@ export default function ProfilePage() {
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingAvatar}
               title="Upload profile picture"
-              style={{ position: "absolute", bottom: 0, right: 0, width: 28, height: 28, borderRadius: "50%", background: "#FFA500", border: "2px solid #0A0F3C", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+              style={{ position: "absolute", bottom: 0, right: 0, width: 28, height: 28, borderRadius: "50%", background: "#FFA500", border: "2px solid #fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
             >
               <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
@@ -163,21 +163,21 @@ export default function ProfilePage() {
           </div>
 
           <div style={{ flex: 1 }}>
-            <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{user?.full_name}</h3>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 12, textTransform: "capitalize" }}>
+            <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, color: "#1a1a2e" }}>{user?.full_name}</h3>
+            <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 12, textTransform: "capitalize" }}>
               {user?.role}{user?.location ? ` · ${user.location}` : ""}
             </p>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               {streakDays > 0 ? (
                 <Badge color="#FFA500">{streakDays}-day streak 🔥</Badge>
               ) : (
-                <Badge color="rgba(255,255,255,0.3)">No streak yet</Badge>
+                <Badge color="#9ca3af">No streak yet</Badge>
               )}
-              <Badge color="#22c55e">{completed.length} goals completed</Badge>
+              <Badge color="#16a34a">{completed.length} goals completed</Badge>
               <Badge color="#8b5cf6">{active.length} active goals</Badge>
             </div>
             {avatarError && <p style={{ fontSize: 12, color: "#ef4444", marginTop: 8 }}>{avatarError}</p>}
-            {!avatarError && <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 8 }}>Click the upload button on your photo to change it. Max 5MB.</p>}
+            {!avatarError && <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 8 }}>Click the upload button on your photo to change it. Max 5MB.</p>}
           </div>
 
           <button
@@ -195,7 +195,7 @@ export default function ProfilePage() {
 
       {/* Personal Info */}
       <div className="card" style={{ padding: 24 }}>
-        <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, marginBottom: 20 }}>Personal Information</h4>
+        <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, marginBottom: 20, color: "#1a1a2e" }}>Personal Information</h4>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           {[
             { label: "Full name", key: "full_name" as const, value: user?.full_name ?? "" },
@@ -209,7 +209,7 @@ export default function ProfilePage() {
                 {editing && f.key ? (
                   <input className="input-field" value={form[f.key]} onChange={(e) => setField(f.key!, e.target.value)} style={inputStyle} />
                 ) : (
-                  <p style={{ fontSize: 14, fontWeight: 500, padding: "2px 0", color: f.value ? "#fff" : "rgba(255,255,255,0.3)" }}>
+                  <p style={{ fontSize: 14, fontWeight: 500, padding: "2px 0", color: f.value ? "#1a1a2e" : "#9ca3af" }}>
                     {f.value || "Not set"}
                   </p>
                 )}
@@ -223,7 +223,7 @@ export default function ProfilePage() {
             {editing ? (
               <textarea className="input-field" value={form.bio} onChange={(e) => setField("bio", e.target.value)} style={{ padding: "10px 12px", resize: "vertical" }} rows={3} placeholder="Tell us about yourself…" />
             ) : (
-              <p style={{ fontSize: 14, color: user?.bio ? "#fff" : "rgba(255,255,255,0.3)" }}>{user?.bio || "No bio yet"}</p>
+              <p style={{ fontSize: 14, color: user?.bio ? "#1a1a2e" : "#9ca3af" }}>{user?.bio || "No bio yet"}</p>
             )}
           </FormField>
         </div>
@@ -237,13 +237,13 @@ export default function ProfilePage() {
 
       {/* Achievements */}
       <div className="card" style={{ padding: 24 }}>
-        <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, marginBottom: 16 }}>Achievements</h4>
+        <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, marginBottom: 16, color: "#1a1a2e" }}>Achievements</h4>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
           {achievements.map((a) => (
-            <div key={a.label} className="card" style={{ padding: 14, textAlign: "center", opacity: a.unlocked ? 1 : 0.35, border: a.unlocked ? "1px solid rgba(255,165,0,0.2)" : "1px solid rgba(255,255,255,0.05)" }}>
+            <div key={a.label} className="card" style={{ padding: 14, textAlign: "center", opacity: a.unlocked ? 1 : 0.4, border: a.unlocked ? "1px solid rgba(255,165,0,0.25)" : "1px solid rgba(0,0,0,0.06)" }}>
               <div style={{ fontSize: 24, marginBottom: 6 }}>{a.emoji}</div>
-              <p style={{ fontSize: 11, fontWeight: 600, color: a.unlocked ? "#FFA500" : "rgba(255,255,255,0.4)" }}>{a.label}</p>
-              {!a.unlocked && <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Locked</p>}
+              <p style={{ fontSize: 11, fontWeight: 600, color: a.unlocked ? "#c2790a" : "#6b7280" }}>{a.label}</p>
+              {!a.unlocked && <p style={{ fontSize: 10, color: "#9ca3af", marginTop: 2 }}>Locked</p>}
             </div>
           ))}
         </div>
@@ -252,7 +252,7 @@ export default function ProfilePage() {
       {/* Danger zone */}
       <div className="card" style={{ padding: 24, border: "1px solid rgba(239,68,68,0.2)" }}>
         <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, marginBottom: 8, color: "#ef4444" }}>Danger Zone</h4>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 16 }}>These actions are irreversible.</p>
+        <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 16 }}>These actions are irreversible.</p>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           <button
             onClick={handleDeleteAccount}
@@ -261,7 +261,7 @@ export default function ProfilePage() {
           >
             {deleting ? "Deleting..." : "Delete Account"}
           </button>
-          <button style={{ padding: "10px 18px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "rgba(255,255,255,0.5)", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
+          <button style={{ padding: "10px 18px", background: "#fafaf9", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 10, color: "#6b7280", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
             Export Data
           </button>
         </div>
