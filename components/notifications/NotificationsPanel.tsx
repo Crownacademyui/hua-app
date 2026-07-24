@@ -102,10 +102,10 @@ export function NotificationsPanel() {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const typeColor = {
-    goal_complete: "#22c55e",
+    goal_complete: "#16a34a",
     streak: "#f97316",
     deadline: "#ef4444",
-    admin: "#FFA500",
+    admin: "#c2790a",
   };
 
   return (
@@ -114,20 +114,20 @@ export function NotificationsPanel() {
       {open && (
         <div
           onClick={() => setOpen(false)}
-          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 290 }}
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)", zIndex: 290 }}
         />
       )}
 
       {/* Bell button */}
       <button
         onClick={() => { setOpen(!open); if (!open) markAllRead(); }}
-        style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "rgba(255,255,255,0.7)", cursor: "pointer", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", transition: "all 0.2s" }}
+        style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 10, color: "#6b7280", cursor: "pointer", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", transition: "all 0.2s" }}
       >
         <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
         {unreadCount > 0 && (
-          <span style={{ position: "absolute", top: -4, right: -4, width: 18, height: 18, borderRadius: "50%", background: "#FFA500", border: "2px solid #0A0F3C", fontSize: 10, fontWeight: 700, color: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <span style={{ position: "absolute", top: -4, right: -4, width: 18, height: 18, borderRadius: "50%", background: "#FFA500", border: "2px solid #FCFCFA", fontSize: 10, fontWeight: 700, color: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -143,10 +143,10 @@ export function NotificationsPanel() {
             left: 12,
             maxWidth: 380,
             marginLeft: "auto",
-            background: "#0d1544",
-            border: "1px solid rgba(255,255,255,0.1)",
+            background: "#fff",
+            border: "1px solid rgba(0,0,0,0.08)",
             borderRadius: 16,
-            boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
             zIndex: 300,
             overflow: "hidden",
             animation: "fadeIn 0.2s ease",
@@ -156,21 +156,21 @@ export function NotificationsPanel() {
           }}
         >
           {/* Header */}
-          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-            <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 15, color: "#fff" }}>
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
+            <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 15, color: "#1a1a2e" }}>
               Notifications
             </h3>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               {notifications.some((n) => n.read === false) ? (
-                <button onClick={markAllRead} style={{ background: "none", border: "none", fontSize: 12, color: "#FFA500", cursor: "pointer", fontWeight: 500 }}>
+                <button onClick={markAllRead} style={{ background: "none", border: "none", fontSize: 12, color: "#c2790a", cursor: "pointer", fontWeight: 500 }}>
                   Mark all read
                 </button>
               ) : (
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>All caught up</span>
+                <span style={{ fontSize: 12, color: "#9ca3af" }}>All caught up</span>
               )}
               <button
                 onClick={() => setOpen(false)}
-                style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", display: "flex", padding: 0 }}
+                style={{ background: "none", border: "none", color: "#6b7280", cursor: "pointer", display: "flex", padding: 0 }}
               >
                 <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
@@ -182,22 +182,22 @@ export function NotificationsPanel() {
             {notifications.length === 0 ? (
               <div style={{ padding: 40, textAlign: "center" }}>
                 <div style={{ fontSize: 40, marginBottom: 12 }}>🔔</div>
-                <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 15, color: "#fff", marginBottom: 6 }}>No notifications yet</p>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>We'll notify you about goal deadlines, completions and streaks.</p>
+                <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 15, color: "#1a1a2e", marginBottom: 6 }}>No notifications yet</p>
+                <p style={{ fontSize: 13, color: "#6b7280" }}>We'll notify you about goal deadlines, completions and streaks.</p>
               </div>
             ) : (
               notifications.map((n, i) => (
-                <div key={n.id} style={{ padding: "14px 20px", borderBottom: i < notifications.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none", background: n.read ? "transparent" : "rgba(255,165,0,0.03)", transition: "background 0.2s", display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <div key={n.id} style={{ padding: "14px 20px", borderBottom: i < notifications.length - 1 ? "1px solid rgba(0,0,0,0.05)" : "none", background: n.read ? "transparent" : "rgba(255,165,0,0.05)", transition: "background 0.2s", display: "flex", gap: 12, alignItems: "flex-start" }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: `${typeColor[n.type]}15`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>
                     {n.emoji}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0 }}>{n.title}</p>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: "#1a1a2e", margin: 0 }}>{n.title}</p>
                       {!n.read && <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#FFA500", flexShrink: 0, marginTop: 3 }} />}
                     </div>
-                    <p style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", margin: "3px 0", lineHeight: 1.4 }}>{n.message}</p>
-                    <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", margin: 0 }}>{n.time}</p>
+                    <p style={{ fontSize: 12, color: "#6b7280", margin: "3px 0", lineHeight: 1.4 }}>{n.message}</p>
+                    <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>{n.time}</p>
                   </div>
                 </div>
               ))

@@ -42,8 +42,8 @@ export default function GoalDetailPage() {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: 400, gap: 16 }}>
         <div style={{ fontSize: 48 }}>🎯</div>
-        <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 18 }}>Goal not found</h3>
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>This goal may have been deleted.</p>
+        <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 18, color: "#1a1a2e" }}>Goal not found</h3>
+        <p style={{ fontSize: 14, color: "#6b7280" }}>This goal may have been deleted.</p>
         <Link href="/goals" className="btn-primary" style={{ padding: "10px 20px", fontSize: 14 }}>Back to Goals</Link>
       </div>
     );
@@ -88,10 +88,10 @@ export default function GoalDetailPage() {
   }
 
   const inputStyle = {
-    background: "rgba(255,255,255,0.06)",
+    background: "#fff",
     border: "1px solid rgba(255,165,0,0.4)",
     borderRadius: 10,
-    color: "#fff",
+    color: "#1a1a2e",
     fontFamily: "'Poppins', sans-serif",
     fontSize: 14,
     padding: "10px 12px",
@@ -102,7 +102,7 @@ export default function GoalDetailPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 860 }}>
       {/* Back nav */}
-      <Link href="/goals" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, color: "rgba(255,255,255,0.5)", textDecoration: "none", alignSelf: "flex-start" }}>
+      <Link href="/goals" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, color: "#6b7280", textDecoration: "none", alignSelf: "flex-start" }}>
         <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: "rotate(180deg)" }}>
           <path d="M5 12h14M12 5l7 7-7 7" />
         </svg>
@@ -110,7 +110,7 @@ export default function GoalDetailPage() {
       </Link>
 
       {/* Header card */}
-      <div className="card" style={{ padding: 28, background: `linear-gradient(135deg, ${goal.color}0a, rgba(2,6,111,0.3))`, border: `1px solid ${goal.color}25` }}>
+      <div className="card" style={{ padding: 28, background: `linear-gradient(135deg, ${goal.color}12, rgba(2,6,111,0.04))`, border: `1px solid ${goal.color}30` }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, flexWrap: "wrap" }}>
@@ -121,7 +121,7 @@ export default function GoalDetailPage() {
               <select
                 value={goal.status}
                 onChange={(e) => handleStatusChange(e.target.value as GoalStatus)}
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, color: "#fff", fontFamily: "'Poppins', sans-serif", fontSize: 12, padding: "3px 10px", cursor: "pointer", outline: "none" }}
+                style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.12)", borderRadius: 8, color: "#1a1a2e", fontFamily: "'Poppins', sans-serif", fontSize: 12, padding: "3px 10px", cursor: "pointer", outline: "none" }}
               >
                 {STATUS_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
@@ -134,15 +134,15 @@ export default function GoalDetailPage() {
                 <input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} style={{ ...inputStyle, fontSize: 20, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif" }} />
                 <textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)} style={{ ...inputStyle, resize: "vertical", minHeight: 60 }} rows={2} />
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <label style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>Deadline:</label>
+                  <label style={{ fontSize: 12, color: "#6b7280", whiteSpace: "nowrap" }}>Deadline:</label>
                   <input type="date" value={editDeadline} onChange={(e) => setEditDeadline(e.target.value)} style={{ ...inputStyle, width: "auto" }} />
                 </div>
               </div>
             ) : (
               <>
-                <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, lineHeight: 1.3 }}>{goal.title}</h1>
+                <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, lineHeight: 1.3, color: "#1a1a2e" }}>{goal.title}</h1>
                 {goal.description && (
-                  <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.6 }}>{goal.description}</p>
+                  <p style={{ color: "#4b5563", fontSize: 14, lineHeight: 1.6 }}>{goal.description}</p>
                 )}
               </>
             )}
@@ -181,8 +181,8 @@ export default function GoalDetailPage() {
         {/* Steps */}
         <div className="card" style={{ padding: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-            <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 16 }}>Steps & Milestones</h3>
-            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>{goal.completedSteps}/{goal.totalSteps} done</span>
+            <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 16, color: "#1a1a2e" }}>Steps & Milestones</h3>
+            <span style={{ fontSize: 13, color: "#6b7280" }}>{goal.completedSteps}/{goal.totalSteps} done</span>
           </div>
           <StepList goalId={goal.id} steps={goal.steps} />
         </div>
@@ -191,15 +191,15 @@ export default function GoalDetailPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Progress */}
           <div className="card" style={{ padding: 20 }}>
-            <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 14, marginBottom: 16 }}>Progress</h4>
+            <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 14, marginBottom: 16, color: "#1a1a2e" }}>Progress</h4>
             <div style={{ textAlign: "center", marginBottom: 16 }}>
               <div style={{ fontSize: 52, fontWeight: 800, color: goal.color, lineHeight: 1 }}>{goal.progress}%</div>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>complete</p>
+              <p style={{ fontSize: 12, color: "#6b7280", marginTop: 4 }}>complete</p>
             </div>
             <ProgressBar value={goal.progress} color={goal.color} height={8} />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8 }}>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>0%</span>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>100%</span>
+              <span style={{ fontSize: 11, color: "#9ca3af" }}>0%</span>
+              <span style={{ fontSize: 11, color: "#9ca3af" }}>100%</span>
             </div>
             {goal.progress === 100 && (
               <div style={{ textAlign: "center", marginTop: 12, fontSize: 22 }}>🏆 Goal complete!</div>
@@ -208,7 +208,7 @@ export default function GoalDetailPage() {
 
           {/* Details */}
           <div className="card" style={{ padding: 20 }}>
-            <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 14, marginBottom: 14 }}>Details</h4>
+            <h4 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 14, marginBottom: 14, color: "#1a1a2e" }}>Details</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {[
                 { label: "Status", value: goal.status },
@@ -218,8 +218,8 @@ export default function GoalDetailPage() {
                 { label: "Steps", value: `${goal.completedSteps} of ${goal.totalSteps}` },
               ].map((d) => (
                 <div key={d.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>{d.label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 600, textTransform: "capitalize" }}>{d.value}</span>
+                  <span style={{ fontSize: 13, color: "#6b7280" }}>{d.label}</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, textTransform: "capitalize", color: "#1a1a2e" }}>{d.value}</span>
                 </div>
               ))}
             </div>
