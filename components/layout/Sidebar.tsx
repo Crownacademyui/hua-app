@@ -29,7 +29,7 @@ export function Sidebar({ collapsed }: SidebarProps) {
   const streakDays = totalGoals > 0 ? 7 : 0;
 
   return (
-    <aside style={{ width: collapsed ? 64 : 240, flexShrink: 0, height: "100vh", position: "fixed", left: 0, top: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.08)", transition: "width 0.3s ease", zIndex: 100, overflow: "hidden", background: "linear-gradient(180deg, rgba(2,6,111,0.6) 0%, rgba(10,15,60,0.95) 100%)", backdropFilter: "blur(20px)" }}>
+    <aside style={{ width: collapsed ? 64 : 240, flexShrink: 0, height: "100vh", position: "fixed", left: 0, top: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.08)", transition: "width 0.3s ease", zIndex: 100, overflow: "hidden", background: "linear-gradient(180deg, #050a8a 0%, #02066F 45%, #060a3a 100%)" }}>
 
       {/* Logo — links to dashboard */}
       <Link href="/dashboard" style={{ padding: "20px 16px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", gap: 12, minHeight: 72, textDecoration: "none" }}>
@@ -47,7 +47,7 @@ export function Sidebar({ collapsed }: SidebarProps) {
           const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
           return (
             <Link key={item.href} href={item.href} title={collapsed ? item.label : ""}
-              style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 10, fontSize: 14, fontWeight: 500, color: isActive ? "#FFA500" : "rgba(255,255,255,0.5)", background: isActive ? "rgba(255,165,0,0.1)" : "transparent", textDecoration: "none", transition: "all 0.2s" }}>
+              style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 10, fontSize: 14, fontWeight: 500, color: isActive ? "#FFA500" : "rgba(255,255,255,0.6)", background: isActive ? "rgba(255,165,0,0.12)" : "transparent", textDecoration: "none", transition: "all 0.2s" }}>
               <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={isActive ? "#FFA500" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                 {item.icon.split(" M").map((d, i) => <path key={i} d={i === 0 ? d : "M" + d} />)}
               </svg>
@@ -69,22 +69,22 @@ export function Sidebar({ collapsed }: SidebarProps) {
       {/* Bottom */}
       <div style={{ padding: "12px 10px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
         {!collapsed && (
-          <div style={{ padding: "12px 14px", background: streakDays > 0 ? "rgba(255,165,0,0.08)" : "rgba(255,255,255,0.04)", borderRadius: 12, marginBottom: 8, border: streakDays > 0 ? "1px solid rgba(255,165,0,0.15)" : "1px solid rgba(255,255,255,0.08)" }}>
+          <div style={{ padding: "12px 14px", background: streakDays > 0 ? "rgba(255,165,0,0.1)" : "rgba(255,255,255,0.05)", borderRadius: 12, marginBottom: 8, border: streakDays > 0 ? "1px solid rgba(255,165,0,0.18)" : "1px solid rgba(255,255,255,0.08)" }}>
             {streakDays > 0 ? (
               <>
                 <p style={{ fontSize: 11, color: "#FFA500", fontWeight: 600, marginBottom: 2 }}>🔥 {streakDays}-day streak!</p>
-                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Keep going, you're on fire</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Keep going, you're on fire</p>
               </>
             ) : (
               <>
-                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", fontWeight: 600, marginBottom: 2 }}>👋 No streak yet</p>
-                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Create a goal to get started</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", fontWeight: 600, marginBottom: 2 }}>👋 No streak yet</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Create a goal to get started</p>
               </>
             )}
           </div>
         )}
         <button onClick={signOut} title={collapsed ? "Log out" : ""}
-          style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 10, fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.5)", cursor: "pointer", transition: "all 0.2s", background: "none", border: "none", width: "100%", textAlign: "left" }}>
+          style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 10, fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.6)", cursor: "pointer", transition: "all 0.2s", background: "none", border: "none", width: "100%", textAlign: "left" }}>
           <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
           </svg>
